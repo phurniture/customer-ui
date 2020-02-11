@@ -44,9 +44,33 @@ class customerList:
         cur.execute(sql,tokens)
 
     def verifyNew(self,n=0):
-        self.errorlist = []
+        import re
         if len(self.data[n]['fname']) == 0:
             self.errorlist.append("First name cannont be blank")
+       
+        if len(self.data[n]['lname']) == 0:
+            self.errorlist.append("Last name cannont be blank")
+       
+        if len(self.data[n]['email']) == 0:
+            self.errorlist.append("Email cannont be blank")
+
+        elif re.match('[^@]+@[^@]+\.[^@]+',self.data[n]['email']):
+            pass
+        else:
+            self.errorlist.append("Email address invalid, check for @ and TLD (i.e. .com, .edu, .gov, etc.")
+
+       
+        if len(self.data[n]['password']) == 0:
+            self.errorlist.append("Password cannont be blank")
+        if len(self.data[n]['password']) < 4:
+            self.errorlist.append("Password must be longer than 4 characters")
+       
+        if len(self.data[n]['subscribed']) == 0:
+            self.errorlist.append("Subscription cannont be blank")
+        elif self.data[n]['subscribed'] != 'True':
+            if self.data[n]['subscribed'] != 'False':
+                self.errorlist.append("Subscription must be True or False")
+
         
         #Add error and validation checking
         #dont forget to call the function to test it
