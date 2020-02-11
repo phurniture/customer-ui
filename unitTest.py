@@ -12,12 +12,12 @@ cl.set('password','password')
 cl.set('subscribed','True')
 cl.add()
 cl.add()
-#print(cl.data)
-'''
+print(cl.data)
+
 print(cl.data)
 print(cl.data[0])
 cl.update(0,'email','gov@email.gov')
 cl.update(0,'e_mail','gov@email.gov')
 print(cl.data)
-'''
+
 cl.insert()

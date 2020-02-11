@@ -6,6 +6,7 @@ class customerList:
         self.tempdata = {}
         self.tn = 'grinnecw_customers'
         self.fnl = ['fname','lname','email','password','subscribed']
+        self.errorlist = []
  
     def connect(self):
         import config
@@ -41,3 +42,16 @@ class customerList:
         print(sql)
         print(tokens)
         cur.execute(sql,tokens)
+
+    def verifyNew(self,n=0):
+        self.errorlist = []
+        if len(self.data[n]['fname']) == 0:
+            self.errorlist.append("First name cannont be blank")
+        
+        #Add error and validation checking
+        #dont forget to call the function to test it
+        
+        if len(self.errorlist) > 0:
+            return False
+        else:
+            return True
