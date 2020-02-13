@@ -6,11 +6,13 @@ class customerList:
         self.tempdata = {}
         self.tn = 'grinnecw_customers'
         self.fnl = ['fname','lname','email','password','subscribed']
+        self.pk = 'id'
         self.errorlist = []
+        self.conn = None
  
     def connect(self):
         import config
-        return pymysql.connect(host=config.DB['host'], port=config.DB['port'], user=config.DB['user'], passwd=config.DB['passwd'], db=config.DB['db'], autocommit=True)
+        self.conn = pymysql.connect(host=config.DB['host'], port=config.DB['port'], user=config.DB['user'], passwd=config.DB['passwd'], db=config.DB['db'], autocommit=True)
 
    
     def add(self):
@@ -35,13 +37,25 @@ class customerList:
         tokens = []
         for feildname in self.fnl:
             tokens.append(self.data[n][feildname])
-
         sql = 'INSERT INTO `' + self.tn + '` ('+ cols + ') VALUES (' + vals + ')'
-        conn = self.connect()
-        cur = conn.cursor(pymysql.cursors.DictCursor)
+        self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
         print(sql)
         print(tokens)
         cur.execute(sql,tokens)
+        self.data[n][self.pk] = cur.lastrowid
+
+    def delete(self,n=0):
+        item = self.data.pop(n)
+        self.deleteByID(item[self.pk])
+
+    def deleteByID(self, id):
+        sql = 'DELETE FROM `' + self.tn + '` WHERE `' + self.pk + '` = %s;'
+        tokens = (id)
+        self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        cur.execute(sql,tokens)
+
 
     def verifyNew(self,n=0):
         import re
@@ -62,7 +76,7 @@ class customerList:
        
         if len(self.data[n]['password']) == 0:
             self.errorlist.append("Password cannont be blank")
-        if len(self.data[n]['password']) < 4:
+        elif len(self.data[n]['password']) < 4:
             self.errorlist.append("Password must be longer than 4 characters")
        
         if len(self.data[n]['subscribed']) == 0:
