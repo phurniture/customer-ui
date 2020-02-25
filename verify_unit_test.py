@@ -10,7 +10,7 @@ cl = customerList()
 #cl.add(d)
 #print(cl.data)
 
-
+'''
 cl.set('fname','first')
 cl.set('lname','last')
 cl.set('email','address@email.com')
@@ -22,7 +22,7 @@ print(cl.data[0])
 time.sleep(10)
 cl.delete()
 print(cl.data)
-
+'''
 
 '''
 cl.set('fname','a')

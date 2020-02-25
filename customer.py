@@ -93,3 +93,41 @@ class customerList:
             return False
         else:
             return True
+
+    def getById(self, id):
+        sql = 'SELECT * FROM `' + self.tn + '` WHERE `' + self.pk + '` = %s;'
+        tokens = (id)
+        self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        cur.execute(sql,tokens)
+        self.data = []
+        for row in cur:
+            self.data.append(row)
+        
+    def getAll(self, order =  None):
+        sql = 'SELECT * FROM `' + self.tn + '`'
+        if order != None:
+            sql += ' ORDER BY `' + order +'`'
+        self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        cur.execute(sql)
+        self.data = []
+        for row in cur:
+            self.data.append(row)
+
+    def update(self,n=0):
+        tokens = []
+        setstring = ''
+        for feildname in self.data[n].keys():
+            if feildname != self.pk:
+                setstring += ' `' + feildname + '` = %s,' 
+                tokens.append(self.data[n][feildname])
+        
+        setstring = setstring[:-1]
+        sql = 'UPDATE `' + self.tn + '` SET ' + setstring + ' WHERE `' + self.pk + '` = %s'
+        tokens.append(self.data[n][self.pk])
+        self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        #print(sql)
+        #print(tokens)
+        cur.execute(sql,tokens)
