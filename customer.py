@@ -31,17 +31,21 @@ class customerList:
             print('could not set value at row ' + str(n) + ' col ' + str(fn))
     def insert(self,n=0):
 
-        cols = '`,`'.join(self.fnl)
-        cols = '`' + cols + '`'
-        vals = ('%s,' * len(self.fnl))[:-1]
+        cols = ''
+        vals = ''
         tokens = []
         for feildname in self.fnl:
-            tokens.append(self.data[n][feildname])
+            if feildname in self.data[n].keys():
+                tokens.append(self.data[n][feildname])
+                vals += '%s,'
+                cols += '`' + feildname + '`,'
+        vals = vals[:-1]
+        cols = cols[:-1]
         sql = 'INSERT INTO `' + self.tn + '` ('+ cols + ') VALUES (' + vals + ')'
         self.connect()
         cur = self.conn.cursor(pymysql.cursors.DictCursor)
-        print(sql)
-        print(tokens)
+        #print(sql)
+        #print(tokens)
         cur.execute(sql,tokens)
         self.data[n][self.pk] = cur.lastrowid
 
@@ -131,3 +135,23 @@ class customerList:
         #print(sql)
         #print(tokens)
         cur.execute(sql,tokens)
+
+    def getByField(self, field, value):
+        sql = 'SELECT * FROM `' + self.tn + '` WHERE `' + field + '` = %s;'
+        tokens = (value)
+        self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        cur.execute(sql,tokens)
+        self.data = []
+        for row in cur:
+            self.data.append(row)
+
+    def getLikeField(self, field, value):
+        sql = 'SELECT * FROM `' + self.tn + '` WHERE `' + field + '` LIKE %s;'
+        tokens = ('%'+value+'%')
+        self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        cur.execute(sql,tokens)
+        self.data = []
+        for row in cur:
+            self.data.append(row)

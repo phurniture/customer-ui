@@ -24,7 +24,7 @@ cl.delete()
 print(cl.data)
 '''
 
-'''
+
 cl.set('fname','a')
 cl.set('lname','a')
 cl.set('email','a@a.a')
@@ -32,6 +32,6 @@ cl.set('password','aaaa')
 cl.set('subscribed','True')
 cl.add()
 cl.verifyNew()
- 
-print(cl.errorlist)
-'''
+#print(cl.errorlist)
+#print(cl.data)
+cl.insert()
